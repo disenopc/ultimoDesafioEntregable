@@ -1,10 +1,11 @@
+//VARIABLES-CONSTANTES GLOBALES
 let productoA = [];
 const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 let productoL
 
 
 
-
+//RENDERIZAR PRODUCTOS
 function productosRenderizados() {
     const card = document.getElementById("cardDinamica");
     for (let array of productoA) {
@@ -25,9 +26,10 @@ function productosRenderizados() {
             agregarAlCarrito(array);
         });
     });
-    //Abrir carrito
+
 
 }
+//TOMAR PRODUCTOS DEL JSON
 async function obtenerJSON() {
     const URLJSON = "/productos.json";
     const resp = await fetch("productos.json");
@@ -36,7 +38,8 @@ async function obtenerJSON() {
     productosRenderizados();
 }
 obtenerJSON();
-//Interactuando con el html
+
+//INTERACCION CON EL DOM
 let textoBotonUno = document.getElementById("botonUno");
 console.log(textoBotonUno.innerHTML);
 textoBotonUno.innerHTML = "Inicio";
@@ -53,9 +56,7 @@ fondoFooter.style.background = "black";
 fondoFooter.style.color = "white";
 console.log(fondoFooter.innerHTML);
 
-
-
-//Eventos sobre el Formulario Newsletter
+//EVENTOS SOBRE EL FORM DE NEWSLETTER
 
 let form = document.getElementById("formulario");
 form.addEventListener("click", (e) => botonEnviar(e));
@@ -98,10 +99,7 @@ class Suscriptores {
 
 const listasuscriptores = new Suscriptores();
 
-
-
-
-//Tecla enter
+//PRESION DEL ENTER ANTES DE ESCRIBIR EMAIL
 function capturarP(e) {
     ((e.which == 13) || (e.keycode == 13)) ? Swal.fire({
         text: 'Ingrese un email válido y luego presione enviar',
@@ -110,44 +108,9 @@ function capturarP(e) {
 };
 
 
-//Modo cuervo
-// let modo = localStorage.getItem("modo");
-// if (modo == null) {
-//     modo = "dark"
-// };
-// let menu = document.getElementById("menu");
-// let boton = document.getElementById("mode");
-// document.body.className = modo;
-// menu.className = "navbar navbar-expand-lg " + modo;
-// localStorage.setItem("modo", modo);
-
-function blue() {
-    document.body.className = "blue"
-    menu.className = "navbar navbar-expand-lg blue";
-    modo = "blue";
-    boton.innerText = "Modo Cuervo";
-}
-
-function dark() {
-    document.body.className = "dark";
-    menu.className = "navbar navbar-expand-lg dark";
-    modo = "dark";
-    boton.innerText = "Modo Oscuro";
-}
-//IF TERNARIO
-// boton.onclick = () => {
-//     {
-//         (modo == "dark") ? blue(): dark();
-//         console.log("El boton funciona");
-//     }
-
-//     localStorage.setItem("modo", modo);
-// }
-
-//Modificador de carro  
+//SIMULADOR DE CARRITO 
 let carritoDeCompras = [];
 
-//Tabla simula carrito
 
 function agregarAlCarrito(productoNuevo) {
     const findCarrito = carritoDeCompras.find(e => e.id === productoNuevo.id)
@@ -172,36 +135,38 @@ function agregarAlCarrito(productoNuevo) {
     tablaDelCarrito()
 
 }
-
+//AGREGAR LOS PRODUCTOS AL DOM
 function tablaDelCarrito(productoNuevo) {
     const tabla = document.getElementById("cuerpoTabla");
     tabla.innerHTML = ""
 
     carritoDeCompras.forEach((productoNuevo) => {
-            cuerpoTabla.innerHTML += `<div class="cartBox">
-            <div>${productoNuevo.id}</div>
-            <div class="detail-box">
+            cuerpoTabla.innerHTML += `
+            <div class="cartBox">
+                <p>${productoNuevo.id}</p>
+                <div class="detail-box">
                     <div class="cart-prod-title"> ${ productoNuevo.nombre } </div>
                     <div class="cart-price">$ ${ productoNuevo.precio } </div>
-                    <input type="number" value="1" class="cart-quantity">                                
-            </div>
+                <<input type="number" value="1" class="cart-quantity">>                                
+                </div>
             <i class='bx bx-trash cart-remove' id ="btnEliminar${productoNuevo.id}"></i>
             </div> 
-             </tr> `;
+            `;
 
         }),
 
         carritoDeCompras.forEach(productoNuevo => {
             document.getElementById(`btnEliminar${ productoNuevo.id }`).addEventListener('click', function() {
                 eliminar(productoNuevo);
+                sumarTotal()
             });
         });
-
+    //SUMAR EL TOTAL DEL CARRITO
     const sumaCarrito = document.createElement("div");
     const sumarProductos = carritoDeCompras.map(productoNuevo => productoNuevo.precio * productoNuevo.cantidad).reduce((prev, curr) => prev + curr, 0);
     cuerpoTabla.appendChild(sumaCarrito);
     sumaCarrito.innerHTML = "$" + sumarProductos;
-
+    //BORRAR EL TOTAL DEL CARRITO
     const borrarCarrito = document.createElement("div");
     cuerpoTabla.appendChild(borrarCarrito);
     borrarCarrito.innerHTML = `<button id ="btnBorrarCarrito" class = "btn btn-warning rounded-pill text-secondary"> Borrar carrito </button>`
@@ -227,26 +192,16 @@ function tablaDelCarrito(productoNuevo) {
         })
     });
 
-
+    let cantidadInput = document.getElementsByClassName("cart-quantity");
+    for (let i = 0; i < cantidadInput.length; i++) {
+        let input = cantidadInput[i];
+        input.addEventListener('change', cantidadChanged);
+    }
     localStorage.setItem("carrito", JSON.stringify(carritoDeCompras));
 }
-
-//CARRITO
-let closeCart = document.querySelector("#cerrarCarro");
-let cartIcon = document.querySelector("#cart-icon");
-let cart = document.querySelector(".cart");
-
-cartIcon.onclick = () => {
-    cart.classList.add("active");
-};
-//Cerrar carrito
-closeCart.onclick = () => {
-    cart.classList.remove("active");
-};
 const borrar = () => {
     carritoDeCompras = [];
     tablaDelCarrito();
-
 
 }
 const eliminar = (productoNuevo) => {
@@ -256,4 +211,83 @@ const eliminar = (productoNuevo) => {
     tablaDelCarrito();
 }
 
+function sumarTotal() {
+    let contenidoDelCarro = document.getElementById("cuerpoTabla");
+    let tarjeta = contenidoDelCarro.getElementsByClassName("cartBox");
+    let total = 0;
+    for (let i = 0; i < tarjeta.length; i++) {
+        let tarjetaU = tarjeta[i];
+        let elementoPrecio = tarjetaU.getElementsByClassName("cart-price");
+        let elementoCantidad = tarjetaU.getElementsByClassName("cart-quantity");
+        let precio = parseFloat(elementoPrecio.innerText.replace("$", " "));
+        let cantidad = elementoCantidad.value;
+        total = total + (precio * cantidad);
+
+        document.getElementsByClassName("total-price")[0].innerText = '$' + total;
+    }
+}
+sumarTotal()
+
+function cantidadChanged(event) {
+    let input = event.target
+    if (isNaN(input.value) || input.value <= 0) {
+        input.value = 1
+    }
+    sumarTotal();
+}
+
 tablaDelCarrito();
+
+//BOTONES DE ABRIR Y CERRAR EL CARRO
+let closeCart = document.querySelector("#cerrarCarro");
+let cartIcon = document.querySelector("#cart-icon");
+let cart = document.querySelector(".cart");
+
+cartIcon.onclick = () => {
+    cart.classList.add("active");
+    cart.classList.remove("oculto");
+
+};
+
+closeCart.onclick = () => {
+    cart.classList.remove("active");
+    cart.classList.add("oculto");
+
+};
+
+
+//*******************************************************************CAMBIO DE COLOR BODY
+
+//Modo cuervo
+// let modo = localStorage.getItem("modo");
+// if (modo == null) {
+//     modo = "dark"
+// };
+// let menu = document.getElementById("menu");
+// let boton = document.getElementById("mode");
+// document.body.className = modo;
+// menu.className = "navbar navbar-expand-lg " + modo;
+// localStorage.setItem("modo", modo);
+
+// function blue() {
+//     document.body.className = "blue"
+//     menu.className = "navbar navbar-expand-lg blue";
+//     modo = "blue";
+//     boton.innerText = "Modo Cuervo";
+// }
+
+// function dark() {
+//     document.body.className = "dark";
+//     menu.className = "navbar navbar-expand-lg dark";
+//     modo = "dark";
+//     boton.innerText = "Modo Oscuro";
+// }
+//IF TERNARIO
+// boton.onclick = () => {
+//     {
+//         (modo == "dark") ? blue(): dark();
+//         console.log("El boton funciona");
+//     }
+
+//     localStorage.setItem("modo", modo);
+// }
