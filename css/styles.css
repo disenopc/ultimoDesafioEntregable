@@ -146,10 +146,12 @@ nav {
     font-weight: 600;
 }
 
-.total-price {
+#totalPrice {
     margin-left: 0.5rem;
     display: flex;
     justify-content: flex-end;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .close-cart {
@@ -160,5 +162,17 @@ nav {
     cursor: pointer;
 }
 
+.botonMenos,
+.botonMas {
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    margin: 0;
+}
 
-/*Hoja Formulario venta*/
+.botonMenos {
+    padding-left: 8.5px;
+    padding-right: 8.5px;
+    padding-top: 1px;
+    padding-bottom: 1.5px;
+}

@@ -21,12 +21,12 @@ function productosRenderizados() {
          </div>`
         card.appendChild(productoL);
     };
+    //EVENTO DE BOTON
     productoA.forEach(array => {
         document.getElementById(`btn${array.id}`).addEventListener('click', function() {
             agregarAlCarrito(array);
         });
     });
-
 
 }
 //TOMAR PRODUCTOS DEL JSON
@@ -57,7 +57,6 @@ fondoFooter.style.color = "white";
 console.log(fondoFooter.innerHTML);
 
 //EVENTOS SOBRE EL FORM DE NEWSLETTER
-
 let form = document.getElementById("formulario");
 form.addEventListener("click", (e) => botonEnviar(e));
 const botonEnviar = (e) => {
@@ -111,7 +110,6 @@ function capturarP(e) {
 //SIMULADOR DE CARRITO 
 let carritoDeCompras = [];
 
-
 function agregarAlCarrito(productoNuevo) {
     const findCarrito = carritoDeCompras.find(e => e.id === productoNuevo.id)
     if (!findCarrito) {
@@ -134,38 +132,46 @@ function agregarAlCarrito(productoNuevo) {
     localStorage.setItem("carrito", JSON.stringify(carrito));
     tablaDelCarrito()
 
-}
+};
 //AGREGAR LOS PRODUCTOS AL DOM
 function tablaDelCarrito(productoNuevo) {
     const tabla = document.getElementById("cuerpoTabla");
     tabla.innerHTML = ""
-
     carritoDeCompras.forEach((productoNuevo) => {
             cuerpoTabla.innerHTML += `
             <div class="cartBox">
                 <p>${productoNuevo.id}</p>
                 <div class="detail-box">
                     <div class="cart-prod-title"> ${ productoNuevo.nombre } </div>
+                    <div><button  class="botonMenos" id="btnResta${productoNuevo.id}">-</button> ${productoNuevo.cantidad} <button class="botonMas" id="btnSuma${productoNuevo.id}">+</button></div>
                     <div class="cart-price">$ ${ productoNuevo.precio } </div>
-                <<input type="number" value="1" class="cart-quantity">>                                
+                                              
                 </div>
             <i class='bx bx-trash cart-remove' id ="btnEliminar${productoNuevo.id}"></i>
             </div> 
             `;
 
         }),
-
         carritoDeCompras.forEach(productoNuevo => {
-            document.getElementById(`btnEliminar${ productoNuevo.id }`).addEventListener('click', function() {
+            document.getElementById(`btnEliminar${ productoNuevo.id }`).addEventListener("click", function() {
                 eliminar(productoNuevo);
                 sumarTotal()
             });
         });
-    //SUMAR EL TOTAL DEL CARRITO
-    const sumaCarrito = document.createElement("div");
-    const sumarProductos = carritoDeCompras.map(productoNuevo => productoNuevo.precio * productoNuevo.cantidad).reduce((prev, curr) => prev + curr, 0);
-    cuerpoTabla.appendChild(sumaCarrito);
-    sumaCarrito.innerHTML = "$" + sumarProductos;
+    //SUMAR CANTIDAD
+    carritoDeCompras.forEach(productoNuevo => {
+        document.getElementById(`btnResta${productoNuevo.id}`).addEventListener("click", function() {
+            restar(productoNuevo)
+        });
+    });
+    //RESTAR CANTIDAD
+    carritoDeCompras.forEach(productoNuevo => {
+        document.getElementById(`btnSuma${productoNuevo.id}`).addEventListener("click", function() {
+            sumar(productoNuevo)
+        });
+    });
+
+
     //BORRAR EL TOTAL DEL CARRITO
     const borrarCarrito = document.createElement("div");
     cuerpoTabla.appendChild(borrarCarrito);
@@ -190,14 +196,34 @@ function tablaDelCarrito(productoNuevo) {
                 borrar();
             }
         })
+
+
     });
 
-    let cantidadInput = document.getElementsByClassName("cart-quantity");
-    for (let i = 0; i < cantidadInput.length; i++) {
-        let input = cantidadInput[i];
-        input.addEventListener('change', cantidadChanged);
+
+    const totalF = document.getElementById("totalPrice");
+    totalF.innerHTML = ""
+    const sumaCarrito = document.createElement("div");
+    const sumarProductos = carritoDeCompras.map(productoNuevo => productoNuevo.precio * productoNuevo.cantidad).reduce((prev, curr) => prev + curr, 0);
+    sumaCarrito.innerHTML = "$" + sumarProductos;
+    totalF.appendChild(sumaCarrito);
+
+
+    //RESTA CANTIDADES
+    const restar = (productoNuevo) => {
+            const findCarrito = carritoDeCompras.find(e => e.id === productoNuevo.id);
+            const index = carritoDeCompras.indexOf(findCarrito);
+            carritoDeCompras[index].cantidad--;
+            tablaDelCarrito()
+        }
+        // SUMA CANTIDADES
+    const sumar = (productoNuevo) => {
+        const findCarrito = carritoDeCompras.find(e => e.id === productoNuevo.id);
+        const index = carritoDeCompras.indexOf(findCarrito);
+        carritoDeCompras[index].cantidad++;
+        tablaDelCarrito()
     }
-    localStorage.setItem("carrito", JSON.stringify(carritoDeCompras));
+
 }
 const borrar = () => {
     carritoDeCompras = [];
@@ -210,32 +236,6 @@ const eliminar = (productoNuevo) => {
     carritoDeCompras.splice(index, 1);
     tablaDelCarrito();
 }
-
-function sumarTotal() {
-    let contenidoDelCarro = document.getElementById("cuerpoTabla");
-    let tarjeta = contenidoDelCarro.getElementsByClassName("cartBox");
-    let total = 0;
-    for (let i = 0; i < tarjeta.length; i++) {
-        let tarjetaU = tarjeta[i];
-        let elementoPrecio = tarjetaU.getElementsByClassName("cart-price");
-        let elementoCantidad = tarjetaU.getElementsByClassName("cart-quantity");
-        let precio = parseFloat(elementoPrecio.innerText.replace("$", " "));
-        let cantidad = elementoCantidad.value;
-        total = total + (precio * cantidad);
-
-        document.getElementsByClassName("total-price")[0].innerText = '$' + total;
-    }
-}
-sumarTotal()
-
-function cantidadChanged(event) {
-    let input = event.target
-    if (isNaN(input.value) || input.value <= 0) {
-        input.value = 1
-    }
-    sumarTotal();
-}
-
 tablaDelCarrito();
 
 //BOTONES DE ABRIR Y CERRAR EL CARRO
@@ -254,6 +254,34 @@ closeCart.onclick = () => {
     cart.classList.add("oculto");
 
 };
+// function sumarTotal() {
+//     let contenidoDelCarro = document.getElementById("cuerpoTabla");
+//     let tarjeta = contenidoDelCarro.getElementsByClassName("cartBox");
+//     let total = 0;
+//     for (let i = 0; i < tarjeta.length; i++) {
+//         let tarjetaU = tarjeta[i];
+//         let elementoPrecio = tarjetaU.getElementsByClassName("cart-price");
+//         let elementoCantidad = tarjetaU.getElementsByClassName("cart-quantity");
+//         let precio = parseFloat(elementoPrecio.innerText.replace("$", " "));
+//         let cantidad = elementoCantidad.value;
+//         total = total + (precio * cantidad);
+
+//         document.getElementsByClassName("total-price")[0].innerText = '$' + total;
+//     }
+// }
+// sumarTotal()
+
+// function cantidadChanged(event) {
+//     let input = event.target
+//     if (isNaN(input.value) || input.value <= 0) {
+//         input.value = 1
+//     }
+//     sumarTotal();
+// }
+
+
+
+
 
 
 //*******************************************************************CAMBIO DE COLOR BODY
