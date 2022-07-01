@@ -254,31 +254,32 @@ closeCart.onclick = () => {
 };
 
 //ABRIR Y CERRAR MODAL
-let envioADomicilio = document.querySelector(".envioAdomicilio");
-let modal = document.querySelector(".modalEnvio");
-let cerrarElModal = document.querySelector(".cerrarModal");
+// let envioADomicilio = document.querySelector(".envioAdomicilio");
+// let modal = document.querySelector(".modalEnvio");
+// let cerrarElModal = document.querySelector(".cerrarModal");
 
 
 
-if (envioADomicilio.checked) {
-    envioADomicilio.addEventListener("click", (e) => {
-        e.preventDefault();
-        modal.classList.add("mostralModal");
-    });
-}
-cerrarElModal.addEventListener("click", (e) => {
-    e.preventDefault();
-    modal.classList.remove("mostralModal");
-});
+// if (envioADomicilio.checked) {
+//     envioADomicilio.addEventListener("click", (e) => {
+//         e.preventDefault();
+//         modal.classList.add("mostralModal");
+//     });
+// }
+// cerrarElModal.addEventListener("click", (e) => {
+//     e.preventDefault();
+//     modal.classList.remove("mostralModal");
+// });
 
 
 
 //EVENTO BOTON FINALIZAR COMPRA
 let finDeLaCompra = document.querySelector(".finCompra");
-finDeLaCompra.addEventListener("click", (e) => {
-    Swal.fire(
-        "Gracias por tu compra, hasta pronto"
-    );
+finDeLaCompra.addEventListener("click", () => {
+    Swal.fire({
+        text: "Gracias por tu compra, estamos preparando tu pedido",
+        confirmButtonColor: '#E8D637'
+    });
 });
 
 
