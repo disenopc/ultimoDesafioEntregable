@@ -200,7 +200,6 @@ function tablaDelCarrito(productoNuevo) {
 
     });
 
-
     const totalF = document.getElementById("totalPrice");
     totalF.innerHTML = ""
     const sumaCarrito = document.createElement("div");
@@ -252,34 +251,35 @@ cartIcon.onclick = () => {
 closeCart.onclick = () => {
     cart.classList.remove("active");
     cart.classList.add("oculto");
-
 };
-// function sumarTotal() {
-//     let contenidoDelCarro = document.getElementById("cuerpoTabla");
-//     let tarjeta = contenidoDelCarro.getElementsByClassName("cartBox");
-//     let total = 0;
-//     for (let i = 0; i < tarjeta.length; i++) {
-//         let tarjetaU = tarjeta[i];
-//         let elementoPrecio = tarjetaU.getElementsByClassName("cart-price");
-//         let elementoCantidad = tarjetaU.getElementsByClassName("cart-quantity");
-//         let precio = parseFloat(elementoPrecio.innerText.replace("$", " "));
-//         let cantidad = elementoCantidad.value;
-//         total = total + (precio * cantidad);
 
-//         document.getElementsByClassName("total-price")[0].innerText = '$' + total;
-//     }
-// }
-// sumarTotal()
-
-// function cantidadChanged(event) {
-//     let input = event.target
-//     if (isNaN(input.value) || input.value <= 0) {
-//         input.value = 1
-//     }
-//     sumarTotal();
-// }
+//ABRIR Y CERRAR MODAL
+let envioADomicilio = document.querySelector(".envioAdomicilio");
+let modal = document.querySelector(".modalEnvio");
+let cerrarElModal = document.querySelector(".cerrarModal");
 
 
+
+if (envioADomicilio.checked) {
+    envioADomicilio.addEventListener("click", (e) => {
+        e.preventDefault();
+        modal.classList.add("mostralModal");
+    });
+}
+cerrarElModal.addEventListener("click", (e) => {
+    e.preventDefault();
+    modal.classList.remove("mostralModal");
+});
+
+
+
+//EVENTO BOTON FINALIZAR COMPRA
+let finDeLaCompra = document.querySelector(".finCompra");
+finDeLaCompra.addEventListener("click", (e) => {
+    Swal.fire(
+        "Gracias por tu compra, hasta pronto"
+    );
+});
 
 
 
