@@ -142,9 +142,9 @@ function tablaDelCarrito(productoNuevo) {
             <div class="cartBox">
                 <p>${productoNuevo.id}</p>
                 <div class="detail-box">
-                    <div class="cart-prod-title"> ${ productoNuevo.nombre } </div>
-                    <div><button  class="botonMenos" id="btnResta${productoNuevo.id}">-</button> ${productoNuevo.cantidad} <button class="botonMas" id="btnSuma${productoNuevo.id}">+</button></div>
-                    <div class="cart-price">$ ${ productoNuevo.precio } </div>
+                    <div class="cart-prod-title">  ${ productoNuevo.nombre } </div>
+                    <div>Cantidad: <button  class="botonMenos" id="btnResta${productoNuevo.id}">-</button> ${productoNuevo.cantidad} <button class="botonMas" id="btnSuma${productoNuevo.id}">+</button></div>
+                    <div class="cart-price">Precio: $ ${ productoNuevo.precio } </div>
                                               
                 </div>
             <i class='bx bx-trash cart-remove' id ="btnEliminar${productoNuevo.id}"></i>
