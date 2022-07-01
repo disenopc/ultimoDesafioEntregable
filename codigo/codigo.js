@@ -196,8 +196,6 @@ function tablaDelCarrito(productoNuevo) {
                 borrar();
             }
         })
-
-
     });
 
     const totalF = document.getElementById("totalPrice");
