@@ -161,13 +161,13 @@ function tablaDelCarrito(productoNuevo) {
     //SUMAR CANTIDAD
     carritoDeCompras.forEach(productoNuevo => {
         document.getElementById(`btnResta${productoNuevo.id}`).addEventListener("click", function() {
-            restar(productoNuevo)
+            restar(productoNuevo);
         });
     });
     //RESTAR CANTIDAD
     carritoDeCompras.forEach(productoNuevo => {
         document.getElementById(`btnSuma${productoNuevo.id}`).addEventListener("click", function() {
-            sumar(productoNuevo)
+            sumar(productoNuevo);
         });
     });
 
@@ -208,20 +208,25 @@ function tablaDelCarrito(productoNuevo) {
 
     //RESTA CANTIDADES
     const restar = (productoNuevo) => {
-            const findCarrito = carritoDeCompras.find(e => e.id === productoNuevo.id);
-            const index = carritoDeCompras.indexOf(findCarrito);
-            carritoDeCompras[index].cantidad--;
-            tablaDelCarrito()
-        }
-        // SUMA CANTIDADES
-    const sumar = (productoNuevo) => {
         const findCarrito = carritoDeCompras.find(e => e.id === productoNuevo.id);
         const index = carritoDeCompras.indexOf(findCarrito);
-        carritoDeCompras[index].cantidad++;
-        tablaDelCarrito()
+        carritoDeCompras[index].cantidad--;
+        if (productoNuevo.cantidad <= 0) {
+            (productoNuevo.cantidad = 1);
+        }
     }
-
+    tablaDelCarrito();
 }
+// SUMA CANTIDADES
+const sumar = (productoNuevo) => {
+    const findCarrito = carritoDeCompras.find(e => e.id === productoNuevo.id);
+    const index = carritoDeCompras.indexOf(findCarrito);
+    carritoDeCompras[index].cantidad++;
+
+    tablaDelCarrito();
+}
+
+
 const borrar = () => {
     carritoDeCompras = [];
     tablaDelCarrito();
@@ -279,6 +284,9 @@ finDeLaCompra.addEventListener("click", () => {
         confirmButtonColor: '#E8D637'
     });
 });
+
+
+//LIMITE DE CANTIDAD
 
 
 
